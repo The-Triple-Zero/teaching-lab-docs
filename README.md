@@ -19,7 +19,7 @@ In addition, you can view these documents in your web browser at the [Teaching L
 
 # Additional resources
 
-If you're looking to learn more about Linux, the following resources are great guides to get the exposure to all of the basic concepts. The first two are surface-level material which will give you an introduction, whereas *The LInux Command Line* book is much more in-depth.
+If you're looking to learn more about Linux, the following resources are great guides to get the exposure to all of the basic concepts. The first two are surface-level material which will give you an introduction, whereas *The Linux Command Line* book is much more in-depth.
 
 - https://linuxjourney.com/
 - https://www.geeksforgeeks.org/30-days-of-linux/
