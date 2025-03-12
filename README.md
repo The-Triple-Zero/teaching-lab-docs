@@ -4,7 +4,11 @@ This repository is intended to be used in conjunction to the [Teaching Lab](http
 
 All documentation files are intended to be viewable as plain-text, and rendered into HTML. Therefore, images will be avoided, and verbal descriptions are preferred so that these are entirely consumable in a command-line environment.
 
-# How can I update these documents?
+## Where do I look?
+
+To get started with each section, navigate to the corresponding directory of interest and take a look at the file named `README.md`. This file will explain what the contents in each directory contain, or will point you to further sub-directories.
+
+## How can I update these documents?
 
 As long as you haven't manually edited any files to this repository, you can update them locally using the following command:
 ```bash
