@@ -23,4 +23,4 @@ If you're looking to learn more about Linux, the following resources are great g
 
 - https://linuxjourney.com/
 - https://www.geeksforgeeks.org/30-days-of-linux/
-- https://archive.org/details/the-linux-command-line_202411/page/n13/mode/2up
+- https://archive.org/details/the-linux-command-line_202411/page/n9/mode/2up
