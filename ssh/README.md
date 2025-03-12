@@ -21,7 +21,24 @@ ssh [user@]<server> [-p <port>] [-i <identity_file>]
 ```
 
 Let's break this syntax down bit-by-bit:
-- `[user@]`
-- `<server>`
-- `[-p <port>]`
-- `[-i <identity_file>]`
+- `ssh` - This is the `command` that you supply to your shell in the terminal. Everything that follows it is known as an `argument`. Anything which starts with a `-` is known as a `flag`.
+- `[user@]` - The square braces denote this is an optional parameter. This indicates you can specify a `user` at (`@`) the server. For example: `ssh stew3254@my-server`. If you don't specify a user, the default is your current username.
+- `<server>` - The angle brackets denote this is a required parameter. You *must* specify a server to connect to. For example: `ssh my-server`.
+- `[-p <port>]` - The `-p` is an optional flag specified by a required field called `port`. If you use this flag, you can specify which port you want ssh to connect to. If it isn't provided, the default value is port `22`.
+- `[-i <identity_file>]` - The `-i` is an optional flag specified by a required field called `identity_file`. If you use this flag, you can specify the path to a file containing your public key you want to connect to the server with. If it isn't provided, the default value is port to not use a key.
+
+To ssh into your Kali Linux vm, you might write something like this:
+```bash
+ssh kali@192.168.200.254 -i ~/.ssh/id_ed25519
+```
+
+
+# How can I learn more?
+
+To learn more about using ssh, you can read the manual page for more information. At the bottom, it will tell you the names of other related manual pages.
+
+```bash
+man ssh
+```
+
+There are also numerous guides online which will walk you through many of the basics of ssh, but the most detailed information generally comes from the source.
