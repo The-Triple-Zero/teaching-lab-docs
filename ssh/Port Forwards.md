@@ -113,4 +113,57 @@ Once again, we can route any arbitrary traffic we would like over this connectio
 
 # VPNs
 
-Who needs a poor man's vpn, when we can actually create a real one? However, keep in mind this has a limitation. It is a non-standard setting and will require root access on the remote host as well as the client. In many situations, this is not possible. However, it opens up the ability for full forwarding of Layer 3 traffic in TUN mode. This includes ICMP (ping), TCP, and UDP. Or, you can even forward Layer 2 traffic in TAP mode. Keep in mind this will likely be pretty slow, but when it's needed man is this helpful!
+Who needs a poor man's vpn, when we can actually create a real one? However, keep in mind this has some limitations compared to dynamic forwards.
+
+- It is a non-standard setting, so it is not set by default
+- It will require root access on the remote host, as well as the client
+- Though it will allow all Layer 2 or 3 traffic to go across the network without a special configuration like a Dynamic Forward, it is generally slower than a Dynamic Forward due to TCP / TCP encapsulation as opposed to the remote making the TCP request on your behalf with a SOCKS proxy
+- When using a Layer 2 tunnel, you're doing ARP over a VPN over TCP, which will be very slow
+
+In many situations, this is not possible. However, it opens up the ability for full forwarding of Layer 3 traffic in TUN mode. This includes ICMP (ping), TCP, and UDP. Or, you can even forward Layer 2 traffic in TAP mode. The performance is likely to be terrible. However, when it's needed in a pinch, man is this helpful!
+
+To permit both `point-to-point` (layer 3) and `ethernet` (layer 2) tunnels, you must set the following config on the ssh server you intend to use this feature with.
+```
+PermitTunnel yes
+```
+
+## Layer 3 tunnel
+
+Layer 3 tunnels allow you to encapsulate packets from the IP layer and above (UDP, and TCP). This will allow you to send pings over the `ssh` connection.
+
+### Scenario 1
+
+You happen to be at a train-station with free, open wifi like I am while writing this. You find out all VPNs you have tried are blocked. You want to protect your traffic from your ISP (the train station), and would rather send the traffic back home first before going out to the internet.
+
+Establish a tunnel. From `root` on your machine, you ssh into `root` on the remote host
+```bash
+sudo ssh root@remote -w any
+```
+
+This will establish a layer 3 tunnel using any tun device available on both machines. You should now see a device like this created on both machines:
+```
+4: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 500
+    link/none 
+```
+
+On both sides, set the tunnel device up
+```bash
+sudo ip l set tun0 up
+```
+
+On the remote side, add an ip address, and set up NAT out of this interface. The assumption is you will use iptables.
+```bash
+sudo ip a add 192.168.150.1/29
+# Ensure forwarding is enabled
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+sudo iptables -P FORWARD ACCEPT # This is potentially dangerous depening on what this machine is used for
+sudo iptables -t nat -A POSTROUTING ! -o tun0 -j MASQUERADE
+```
+
+On the local side, add another ip address in the same range, and set it as the default route.
+```bash
+sudo ip a add 192.168.150.2/29
+sudo ip r add default via 192.168.150.1
+```
+
+From here, you should have all traffic going over the tunnel, and can keep you traffic safe from those pesky snoopers at the train station.
