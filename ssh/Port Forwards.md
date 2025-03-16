@@ -133,7 +133,7 @@ Layer 3 tunnels allow you to encapsulate packets from the IP layer and above (UD
 
 ### Scenario 1
 
-You happen to be at a train-station with free, open wifi like I am while writing this. You find out all VPNs you have tried are blocked. You want to protect your traffic from your ISP (the train station), and would rather send the traffic back home first before going out to the internet.
+You happen to be at a train-station with free, open WiFi like I am while writing this. You find out all VPNs you have tried are blocked. You want to protect your traffic from your ISP (the train station), and would rather send the traffic back home first before going out to the internet.
 
 Establish a tunnel. From `root` on your machine, you ssh into `root` on the remote host
 ```bash
@@ -167,3 +167,7 @@ sudo ip r add default via 192.168.150.1
 ```
 
 From here, you should have all traffic going over the tunnel, and can keep you traffic safe from those pesky snoopers at the train station.
+
+## Scenario 2
+
+You have a local network of virtual machines which must route all  traffic to a remote site
