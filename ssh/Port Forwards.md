@@ -67,3 +67,46 @@ ssh my_vps -R 0.0.0.0:25565:192.168.1.5:25565
 ```
 
 You just opened up port `25565` to the world to access on your VPS instance, and it will be routed over to your local Minecraft server running at `192.168.1.5:25565`. Now, nobody will find out your IP, and you get to play with friends!
+
+# Dynamic Forwards
+
+In the previous sections, we saw that though there is much flexibility in creating tunnels with both directions. However, we were limited to one socket pair. What if we could bypass that and open all all ports to go through? Actually, you can! You can have `ssh` set up a SOCKS5 proxy for you. But... with a caveat. It will only work for TCP traffic. It is not possible to forward UDP ports with the built in `ssh` SOCKS5 proxy.
+
+This ability is incredibly useful to bypass firewalls and pivot across a network. It's also commonly known as the "poor man's vpn" because no additional configuration is necessary except for `ssh` access to a server on the network you'd like to connect to things.
+
+## Scenario 1
+
+Let's look back to Scenario 2 from the local forwarding section. It's great that we can now connect to our router, but what about other services on our network such as our Minecraft server?
+
+Let's alter the command to extend its functionality:
+```bash
+ssh jump -D 1080 
+```
+
+What did we just do? We opened a SOCKS5 proxy on our client machine's port `1080`. Now, any SOCKS5 compatible client can forward traffic through our `jump` server to reach internal services. For a browser, this is usually done in the settings, or by using an extension like FoxyProxy. Many applications also allow for SOCKS5 configuration.
+
+However, our Minecraft client doesn't allow for SOCKS in this specific case. How can we overcome it?
+```bash
+mkfifo /tmp/f; cat /tmp/f | nc -klvp 25565 | nc -x localHost:1080 -X 5 192.168.1.5 25565 > /tmp/f; rm /tmp/f
+```
+
+Wait, what is that? That uses netcat to create a listening port on `25565` and pipes the output to the input of a netcat connection using the SOCKS5 proxy we created earlier to connect to out Minecraft server. Now, the output of that connection is redirected to a pipe which is being read and put into the input of the listening port.
+
+In short, you simply opened a new port `25565` on your local host to connect to your Minecraft server.
+
+Or, we can do it in a simpler manner using `socat`.
+```bash
+socat TCP-LISTEN:25565,bind,reuseaddr,fork SOCKS5-CONNECT:localhost:1080:192.168.1.5:25565
+```
+
+## Scenario 2
+
+In the previous section we mentioned a physical penetration test. Though it's great we can execute commands from our Raspberry Pi, wouldn't it be more useful to route arbitrary IP addresses over it from our local machine? With a few commands you can!
+
+```bash
+ssh localhost -p 2222 -J my_vps -D 1080
+```
+
+Here, we jump through the VPS to connect to `localhost:2222`. Now, we create an open port on `1080` to route through the raspberry pi.
+
+Once again, we can route any arbitrary traffic we would like over this connection just as in the previous scenario.
