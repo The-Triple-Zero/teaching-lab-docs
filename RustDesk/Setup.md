@@ -80,3 +80,28 @@ Use this number in your client to connect to your machine, and provide the passw
 ### As a client
 
 You can feel free to modify the settings as you like to meet your needs. However, adaptive scaling is recommended so that if the screen is able to adjust its resolution, it will adapt to your screen size.
+
+From here, RustDesk should be available for use immediately after setup. No additional configuration must be done. However, at this time there are improvements that can be made to further enhance user experience.
+
+## Additional Configuration
+
+Currently, with the default settings you will receive a screen with a resolution size of 1240x780. This is tolerable in a web browser, but will result in a loss of clarity.
+
+In order to increase the resolution size, you can create a fake monitor for Xorg to display to. **Beware**, if you do this, the graphical console will no longer work from the UI. This will be the only way to connect to the machine. However, it will allow you to customize the resolution size to your liking.
+
+In order to do that, navigate to the directory `/usr/share/X11/xorg.conf.d/`. You will find a file called `99_rustdesk.conf.disabled`. Rename that file to remove the `.disabled`. This will give you a new screen with a `1920x1080` resolution by default, but these values can be customized. However, customization of this is out of the scope of this documentation.
+
+```bash
+sudo mv 99_rustdesk.conf.disabled 99_rustdesk.conf
+```
+
+Optionally, you can do it the shorthand way for less typing.
+```bash
+# Or, the shorthand way
+sudo mv 99_rustdesk.conf{.disabled,}
+```
+
+Restart your machine for the changes to take place.
+```bash
+sudo reboot
+```
