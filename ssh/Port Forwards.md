@@ -110,3 +110,7 @@ ssh localhost -p 2222 -J my_vps -D 1080
 Here, we jump through the VPS to connect to `localhost:2222`. Now, we create an open port on `1080` to route through the raspberry pi.
 
 Once again, we can route any arbitrary traffic we would like over this connection just as in the previous scenario.
+
+# VPNs
+
+Who needs a poor man's vpn, when we can actually create a real one? However, keep in mind this has a limitation. It is a non-standard setting and will require root access on the remote host as well as the client. In many situations, this is not possible. However, it opens up the ability for full forwarding of Layer 3 traffic in TUN mode. This includes ICMP (ping), TCP, and UDP. Or, you can even forward Layer 2 traffic in TAP mode. Keep in mind this will likely be pretty slow, but when it's needed man is this helpful!
