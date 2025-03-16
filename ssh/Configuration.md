@@ -139,3 +139,22 @@ Host jump.home
   ...
   DynamicForward 1080
 ```
+
+## Control Master
+
+Control Master allows for session multiplexing. What this means, is it allows you to open multiple ssh sessions over the same TCP connection. In remote environments this has many benefits:
+1. It speeds up the establishment of multiple simultaneous terminal sessions to the same host, because the TCP handshake and authentication handshake are already established. In practical terms, you don't need to sign in again, and it is several seconds faster to establish the initial connection.
+2. It allows you to hold open connections after the first window has been closed by the specified timeout amount. That way in case you closed a session by mistake and a minute later realized  you needed it back, the socket is not closed yet and reconnecting is almost instantaneous.
+3. It reduces overall network bandwidth on a crowded network
+
+This does come with a drawback though. When you change networks or lose connection to the host, all terminals will hang for the specified timeout period unless you manually close the socket. This can often lead to a frustrating time debugging failed connections when you don't remember this is set. This is usually more of a headache on a LAN network than a remote network, so it is advised you turn this off for low-latency, high-bandwidth connections.
+
+Control Master in action
+```
+Host *
+  ControlMaster auto
+  ControlPath ~/.ssh/socket/%r@%h:%p
+  ControlPersist 10m
+  ConnectionAttempts 10
+  ConnectTimeout 10
+```
