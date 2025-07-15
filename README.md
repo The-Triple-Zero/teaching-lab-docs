@@ -1,4 +1,4 @@
-# Teaching Lab Documentation
+`# Teaching Lab Documentation
 
 This repository is intended to be used in conjunction to the [Teaching Lab](https://github.com/stew3254/teaching-lab). It is intended to provide documentation for the various aspects of the teaching lab and some very basic primers on Linux concepts. In addition, it may contain useful scripts to make certain actions easier. For example, setting up RustDesk for a better remote-desktop experience.
 

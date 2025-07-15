@@ -170,4 +170,17 @@ From here, you should have all traffic going over the tunnel, and can keep you t
 
 ## Scenario 2
 
-You have a local network of virtual machines which must route all  traffic to a remote site
+You have a local network of secure virtual machines on `172.18.0.0/16` which must route all traffic to a secure physical site. Unfortunately, the VPN is down. You need to do some critical, time-sensitive work. To make it even more difficult, policy states all host traffic must go through the company proxy. Therefore, you can't route all traffic through the VPN. Can you come up with a work around? Of course you can!
+
+On your local machine, you pre-allocate a tun device to use for the ssh connection and give permission for your user to modify it. Then, you set it up and give it a unique ip address.
+```bash
+ip tuntap add name tun0 mode tun user myuser
+ip l set dev tun0 up
+ip a add 192.168.111.2/30 dev tun0
+```
+
+Now on the remote, you do the same with the correct user, and another ip address.
+```bash
+ssh remote -- 'ip tuntap add name tun0 mode tun user myremoteuser; ip l set dev tun0 up; ip a add 192.168.111.1/30 dev tun0'
+```
+
